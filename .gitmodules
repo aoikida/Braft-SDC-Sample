@@ -1,3 +1,0 @@
-[submodule "brpc"]
-	path = brpc
-	url = https://github.com/apache/brpc.git
