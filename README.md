@@ -28,18 +28,20 @@ This program targets the counter application.
 
 ### 4. Compile
 
-Compile `counter`.
-
-```sh
-make
-```
+Compile `counter`. Please refer to the official documentation.
 
 ### 5. Run the BFI Tool
 
 To apply BFI and induce Silent Data Corruption, execute the following command:
 
 ```sh
-./run_bfi
+./run_bfi.sh
+```
+
+Please modify the contents of run_bfi.sh as needed. Specifically, the following part:
+
+```sh
+~/pin-external-3.31-98869-gfa6f126a8-gcc-linux/pin -t ~/bfi/obj-intel64/bfi.so -cmd WREG -ip 0x5555557158df -ttype IT -thread 3 -trigger 1 -mask 0x8000000000000000 -- ./counter_server -bthread_concurrency=4
 ```
 
 ### 6. Run the Client
