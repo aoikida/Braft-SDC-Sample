@@ -1,0 +1,6 @@
+syntax: glob
+Makefile.local
+bfi.sh
+*.unused
+*.o
+*.so
