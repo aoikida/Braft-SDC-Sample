@@ -11,13 +11,21 @@ This repository provides a sample program that triggers **Silent Data Corruption
 
 ## Usage
 
-### 1. Install Intel Pin 
+### 1. Clone this repository
 
-### 2. Compile Required Repositories
+```sh
+git clone --recurse-submodules https://github.com/aoikida/Braft-SDC-Sample.git
+```
+
+### 2. Install Intel Pin 
+
+Install from [Intel Pin](https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html)
+
+### 3. Compile Required Repositories
 
 Compile Braft, Brpc, and BFI. Please refer to the official documentation for each repository.
 
-### 3. Navigate to the `counter` Directory
+### 4. Navigate to the `counter` Directory
 
 Move to the `example/counter` directory of Braft.
 
@@ -26,11 +34,11 @@ cd /path/to/braft/example/counter
 ```
 This program targets the counter application.
 
-### 4. Compile
+### 5. Compile
 
 Compile `counter`. Please refer to the official documentation.
 
-### 5. Run the BFI Tool
+### 6. Run the BFI Tool
 
 To apply BFI and induce Silent Data Corruption, execute the following command:
 
@@ -44,7 +52,7 @@ Please modify the contents of run_bfi.sh as needed. Specifically, the following 
 ~/pin-external-3.31-98869-gfa6f126a8-gcc-linux/pin -t ~/bfi/obj-intel64/bfi.so -cmd WREG -ip 0x5555557158df -ttype IT -thread 3 -trigger 1 -mask 0x8000000000000000 -- ./counter_server -bthread_concurrency=4
 ```
 
-### 6. Run the Client
+### 7. Run the Client
 
 Next, execute the client and log each request.
 
