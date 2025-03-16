@@ -28,6 +28,8 @@ DEFINE_integer max_segment_size '8388608' 'Max segment size'
 DEFINE_integer server_num '3' 'Number of servers'
 DEFINE_boolean clean 1 'Remove old "runtime" dir before running'
 DEFINE_integer port 8100 "Port of the first server"
+DEFINE_string log_applied_task 'false' "Print notice log when a task is applied"
+DEFINE_string response_redundancy 'false' 'Send get request to all replicas and wait for their responses'
 
 # parse the command-line
 FLAGS "$@" || exit 1
@@ -63,6 +65,8 @@ for ((i=0; i<$FLAGS_server_num; ++i)); do
         -crash_on_fatal_log=${FLAGS_crash_on_fatal} \
         -raft_max_segment_size=${FLAGS_max_segment_size} \
         -raft_sync=${FLAGS_sync} \
+        -log_applied_task=${FLAGS_log_applied_task} \
+        -response_redundancy=${FLAGS_response_redundancy} \
         -port=$((${FLAGS_port}+i)) -conf="${raft_peers}" > std.log 2>&1 &
     cd ../..
 done

@@ -31,6 +31,7 @@ DEFINE_string crash_on_fatal 'true' 'Crash on fatal log'
 DEFINE_string log_each_request 'false' 'Print log for each request'
 DEFINE_string valgrind 'false' 'Run in valgrind'
 DEFINE_string use_bthread "true" "Use bthread to send request"
+DEFINE_string response_redundancy 'false' 'Send get request to all replicas and wait for their responses'
 
 FLAGS "$@" || exit 1
 
@@ -56,4 +57,5 @@ ${VALGRIND} ./counter_client \
         --log_each_request=${FLAGS_log_each_request} \
         --thread_num=${FLAGS_thread_num} \
         --use_bthread=${FLAGS_use_bthread} \
+        --response_redundancy=${FLAGS_response_redundancy}
 

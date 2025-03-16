@@ -31,6 +31,7 @@ DEFINE_int32(snapshot_interval, 30, "Interval between each snapshot");
 DEFINE_string(conf, "", "Initial configuration of the replication group");
 DEFINE_string(data_path, "./data", "Path of data stored on");
 DEFINE_string(group, "Counter", "Id of the replication group");
+DEFINE_bool(response_redundancy, false, "Send get request to all replicas and wait for their responses");
 
 namespace example {
 class Counter;
@@ -138,7 +139,7 @@ public:
     void get(CounterResponse* response) {
         // In consideration of consistency. GetRequest to follower should be 
         // rejected.
-        if (!is_leader()) {
+        if (!FLAGS_response_redundancy && !is_leader()) {
             // This node is a follower or it's not up-to-date. Redirect to
             // the leader if possible.
             return redirect(response);

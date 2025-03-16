@@ -14,20 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copyright Aoi Kida. All Rights Reserved
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # source shflags from current directory
 mydir="${BASH_SOURCE%/*}"
 if [[ ! -d "$mydir" ]]; then mydir="$PWD"; fi
@@ -42,6 +28,8 @@ DEFINE_integer max_segment_size '8388608' 'Max segment size'
 DEFINE_integer server_num '3' 'Number of servers'
 DEFINE_boolean clean 1 'Remove old "runtime" dir before running'
 DEFINE_integer port 8100 "Port of the first server"
+DEFINE_string log_applied_task 'false' "Print notice log when a task is applied"
+DEFINE_string response_redundancy 'false' 'Send get request to all replicas and wait for their responses'
 
 # parse the command-line
 FLAGS "$@" || exit 1
@@ -72,12 +60,15 @@ for ((i=0; i<$FLAGS_server_num; ++i)); do
     mkdir -p runtime/$i
     cp ./counter_server runtime/$i
     cd runtime/$i
-    ${VALGRIND} ~/pin-external-3.31-98869-gfa6f126a8-gcc-linux/pin -t ~/bfi/obj-intel64/bfi.so -cmd WREG -ip 0x5555557158df -ttype IT -thread 3 -trigger 1 -mask 0x8000000000000000 -- ./counter_server -bthread_concurrency=4 \
+    ${VALGRIND} ~/pin-external-3.31-98869-gfa6f126a8-gcc-linux/pin -t ~/bfi/obj-intel64/bfi.so -cmd WREG -ip 0x555555716aaa -ttype IT -thread 3 -trigger 1 -mask 0x8000000000000000 -- ./counter_server -bthread_concurrency=4 \
         -bthread_concurrency=${FLAGS_bthread_concurrency}\
         -crash_on_fatal_log=${FLAGS_crash_on_fatal} \
         -raft_max_segment_size=${FLAGS_max_segment_size} \
         -raft_sync=${FLAGS_sync} \
+        -log_applied_task=${FLAGS_log_applied_task} \
+        -response_redundancy=${FLAGS_response_redundancy} \
         -port=$((${FLAGS_port}+i)) -conf="${raft_peers}" > std.log 2>&1 &
     cd ../..
 done
+
 
